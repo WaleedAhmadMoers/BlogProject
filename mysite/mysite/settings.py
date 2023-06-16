@@ -39,9 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     #local 
-
     'blog.apps.BlogConfig', 
     
+    #third-party
+    'taggit',
 ]
 
 MIDDLEWARE = [
@@ -135,10 +136,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 EMAIL_HOST = 'smtp.gmail.com'
 
 # EMAIL_HOST_USER is the username (or email address) to use when communicating with the email server.
-EMAIL_HOST_USER = 'ourEmail@gmail.com'
+EMAIL_HOST_USER = 'yourEmail@gmail.com'
 
 # EMAIL_HOST_PASSWORD is the password for the email account defined in EMAIL_HOST_USER. This is used for authentication when connecting to the email server.
-EMAIL_HOST_PASSWORD = 'Your Passowrd'
+EMAIL_HOST_PASSWORD = 'YourPassword'
 
 # EMAIL_PORT is the port to use when connecting with the email server. 
 # Port 587 is the default port for the submission of email messages (SMTP protocol).

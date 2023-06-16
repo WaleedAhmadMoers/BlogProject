@@ -15,7 +15,7 @@ urlpatterns = [
     # The associated view is 'views.post_list', and the name of the URL pattern is 'post_list'.
     path('', views.post_list, name='post_list'),
 
-  
+    path('tag/<slug:tag_slug>/', views.post_list, name='post_list_by_tag'),
     # This is a URL pattern for the 'post_detail' view.
     # It will match URLs that are formatted like '/<year>/<month>/<day>/<slug>/'
     # The '<int:year>', '<int:month>', '<int:day>', and '<slug:post>' are path converters 

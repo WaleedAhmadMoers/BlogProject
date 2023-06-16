@@ -4,30 +4,41 @@ from .forms import EmailPostForm , CommentForm
 from django.views.decorators.http import require_POST
 from django.core.paginator import Paginator , EmptyPage, PageNotAnInteger
 from django.core.mail import send_mail
+from taggit.models import Tag
 
-#The post_list view takes the request object as the only parameter.
-def post_list(request):
-    #We retrieve all the posts with the PUBLISHED status using the default manager.
+# post_list view handles the display of posts. 
+# Accepts an optional tag_slug to filter posts by tag.
+def post_list(request, tag_slug=None):
+    # Fetch all PUBLISHED posts.
     post_list = Post.objects.filter(status='PB')
-    #Pagination with 3 posts per page
-    # Create a Paginator object with 3 posts per page
+
+    # If tag_slug is None or not provided, tag will remain as None.
+    # If tag_slug is provided and not None,
+    # tag will be assigned the result of get_object_or_404(Tag, slug=tag_slug).
+    tag = None
+    # If tag_slug is provided, further filter the posts.
+    if tag_slug:
+        tag = get_object_or_404(Tag, slug=tag_slug)
+        post_list = post_list.filter(tags__in=[tag])
+    
+    # Create a paginator with 3 posts per page.
     paginator = Paginator(post_list, 3)
-    # Get the current page number from the query string, default to 1 if not present
+    # Get the current page number, default to 1.
     page_number = request.GET.get('page', 1)
+
+    # Try to fetch the posts for the current page.
     try:
-        # Get posts for the current page
         posts = paginator.page(page_number)
     except PageNotAnInteger:
-        # If page_number is not an integer deliver the first page
+        # If page number is not an integer, show the first page.
         posts = paginator.page(1)
     except EmptyPage:
-        # If the page is out of range, deliver the last page of results
+        # If page is out of range, show the last page.
         posts = paginator.page(paginator.num_pages)
 
-    #render the list of posts with the given template
-    return render(request,
-                 'blog/post/list.html',
-                 {'posts': posts})
+    # Render the posts with the given template.
+    return render(request, 'blog/post/list.html', {'posts': posts, 'tag':tag})
+
 
 # This view is responsible for displaying the details of a specific post along with its active comments and a form for new comments.
 def post_detail(request, year, month, day, post):

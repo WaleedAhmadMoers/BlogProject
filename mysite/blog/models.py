@@ -2,6 +2,7 @@ from django.db import models
 from django.utils import timezone 
 from django.contrib.auth.models import User
 from django.urls import reverse
+from taggit.managers import TaggableManager
 
 
 
@@ -48,8 +49,9 @@ class Post(models.Model):
     # The "Status" enumeration class provides two status options for a post: "DRAFT" and "PUBLISHED", 
     # represented by the values "DF" and "PB", respectively.
     status = models.CharField(max_length = 2 , choices=Status.choices , default = Status.DRAFT)
+    # The tags manager will allow you to add, retrieve, and remove tags from Post objects.
+    tags = TaggableManager()
 
- 
 
     #Defining a default sort order, This class defines metadata for the model
     class Meta:
